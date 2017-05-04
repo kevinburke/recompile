@@ -18,8 +18,12 @@ files in the "public" directory:
 ```
 JSX_TARGETS := $(shell find ./components -name '*.jsx' -depth 1)
 JS_TARGETS := $(shell find ./public -name '*.js' -depth 1)
+RECOMPILE := $(shell command -v recompile)
 
 $(JS_TARGETS): $(JSX_TARGETS)
+ifndef RECOMPILE
+	go get -u github.com/kevinburke/recompile
+endif
 	recompile --command='./node_modules/.bin/babel --plugins transform-react-jsx' --extension=js --out-dir=public "$?"
 
 recompile: $(JS_TARGETS)
