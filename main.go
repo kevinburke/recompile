@@ -11,9 +11,8 @@ import (
 	"path/filepath"
 	"sync"
 
-	"golang.org/x/sync/errgroup"
-
 	shellwords "github.com/mattn/go-shellwords"
+	"golang.org/x/sync/errgroup"
 )
 
 var mu sync.Mutex
@@ -49,6 +48,7 @@ func main() {
 				}
 				outFile = outFile[0:len(outFile)-len(ext)] + newExt
 			}
+			// todo get fancy with printing out command duration?
 			fmt.Printf("%s %q > %s\n", *command, arg, outFile)
 			cmd := exec.CommandContext(errctx, cmdArgs[0], append(cmdArgs[1:], arg)...)
 			// TODO write to temporary file and rename

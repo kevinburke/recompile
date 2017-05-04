@@ -1,14 +1,30 @@
 # recompile
 
-This invokes a command individually on a series of files. The command should
-write the new output to stdout. This gets rewritten to disk according to the
-`--extension` and `--out-dir` arguments.
+This invokes a command individually and concurrently on file arguments passed.
+Each command invocation should write the new file output to stdout. That file
+output gets written to disk according to the `--extension` and `--out-dir`
+arguments.
+
+Example:
+
+```
+recompile --command='babel --plugins=transform-react-jsx' --extension=js \
+    --out-dir=public path/to/file1.jsx path/to/file2.jsx path/to/file3.jsx
+```
+
+That will run three instances of Babel concurrently and print the results to
+public/file1.js, public/file2.js, and public/file3.js respectively.
 
 ### Why
 
 Babel has a `--out-dir` flag, but it doesn't execute commands concurrently, and
 it runs on every file in a directory. In our case we want to run concurrently,
-and we only want to run babel on changed files; this isn't possible with Babel.
+and we only want to run babel on changed files; this isn't really possible with
+Babel's current arguments.
+
+You can run babel in `-w` mode, but that makes it trickier to integrate with
+a larger build pipeline, for example if you want to restart the server each
+time a file changes.
 
 ### Example Usage
 
